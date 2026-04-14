@@ -8,6 +8,7 @@ export async function GET() {
     return Response.json(rows);
   } catch (err) {
     console.error(err);
-    return Response.json({ error: 'Chyba při načítání kategorií' }, { status: 500 });
+    const msg = err instanceof Error ? err.message : String(err);
+    return Response.json({ error: msg }, { status: 500 });
   }
 }

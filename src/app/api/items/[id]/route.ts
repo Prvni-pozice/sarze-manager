@@ -13,7 +13,8 @@ export async function GET(
     return Response.json(item);
   } catch (err) {
     console.error(err);
-    return Response.json({ error: 'Chyba při načítání položky' }, { status: 500 });
+    const msg = err instanceof Error ? err.message : String(err);
+    return Response.json({ error: msg }, { status: 500 });
   }
 }
 
@@ -51,7 +52,8 @@ export async function PATCH(
     return Response.json(item);
   } catch (err) {
     console.error(err);
-    return Response.json({ error: 'Chyba při aktualizaci položky' }, { status: 500 });
+    const msg = err instanceof Error ? err.message : String(err);
+    return Response.json({ error: msg }, { status: 500 });
   }
 }
 
@@ -65,6 +67,7 @@ export async function DELETE(
     return Response.json({ ok: true });
   } catch (err) {
     console.error(err);
-    return Response.json({ error: 'Chyba při mazání položky' }, { status: 500 });
+    const msg = err instanceof Error ? err.message : String(err);
+    return Response.json({ error: msg }, { status: 500 });
   }
 }

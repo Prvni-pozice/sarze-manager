@@ -112,6 +112,7 @@ export async function POST(
     });
   } catch (err) {
     console.error(err);
-    return Response.json({ error: 'Chyba při dokončení výroby' }, { status: 500 });
+    const msg = err instanceof Error ? err.message : String(err);
+    return Response.json({ error: msg }, { status: 500 });
   }
 }

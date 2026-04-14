@@ -13,7 +13,8 @@ export async function GET(
     return Response.json(vendor);
   } catch (err) {
     console.error(err);
-    return Response.json({ error: 'Chyba při načítání dodavatele' }, { status: 500 });
+    const msg = err instanceof Error ? err.message : String(err);
+    return Response.json({ error: msg }, { status: 500 });
   }
 }
 
@@ -46,7 +47,8 @@ export async function PATCH(
     return Response.json(vendor);
   } catch (err) {
     console.error(err);
-    return Response.json({ error: 'Chyba při aktualizaci dodavatele' }, { status: 500 });
+    const msg = err instanceof Error ? err.message : String(err);
+    return Response.json({ error: msg }, { status: 500 });
   }
 }
 
@@ -60,6 +62,7 @@ export async function DELETE(
     return Response.json({ ok: true });
   } catch (err) {
     console.error(err);
-    return Response.json({ error: 'Chyba při mazání dodavatele' }, { status: 500 });
+    const msg = err instanceof Error ? err.message : String(err);
+    return Response.json({ error: msg }, { status: 500 });
   }
 }

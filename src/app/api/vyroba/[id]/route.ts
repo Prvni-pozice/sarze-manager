@@ -65,7 +65,8 @@ export async function GET(
     return Response.json({ ...production, pickLines });
   } catch (err) {
     console.error(err);
-    return Response.json({ error: 'Chyba při načítání výroby' }, { status: 500 });
+    const msg = err instanceof Error ? err.message : String(err);
+    return Response.json({ error: msg }, { status: 500 });
   }
 }
 
@@ -93,6 +94,7 @@ export async function PATCH(
     return Response.json(production);
   } catch (err) {
     console.error(err);
-    return Response.json({ error: 'Chyba při aktualizaci výroby' }, { status: 500 });
+    const msg = err instanceof Error ? err.message : String(err);
+    return Response.json({ error: msg }, { status: 500 });
   }
 }

@@ -94,6 +94,7 @@ export async function POST(
     return Response.json({ ok: true, pickLines: createdPickLines });
   } catch (err) {
     console.error(err);
-    return Response.json({ error: 'Chyba při generování pick lines' }, { status: 500 });
+    const msg = err instanceof Error ? err.message : String(err);
+    return Response.json({ error: msg }, { status: 500 });
   }
 }

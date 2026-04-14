@@ -28,7 +28,8 @@ export async function GET() {
     return Response.json(rows);
   } catch (err) {
     console.error(err);
-    return Response.json({ error: 'Chyba při načítání výrob' }, { status: 500 });
+    const msg = err instanceof Error ? err.message : String(err);
+    return Response.json({ error: msg }, { status: 500 });
   }
 }
 
@@ -60,7 +61,8 @@ export async function POST(request: Request) {
     return Response.json(production, { status: 201 });
   } catch (err) {
     console.error(err);
-    return Response.json({ error: 'Chyba při vytváření výroby' }, { status: 500 });
+    const msg = err instanceof Error ? err.message : String(err);
+    return Response.json({ error: msg }, { status: 500 });
   }
 }
 
