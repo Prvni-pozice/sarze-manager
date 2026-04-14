@@ -4,6 +4,5 @@ dist/
 .env.local
 *.log
 
-# Lokální podklady — neverzovat
-podklady/*
-!podklady/.gitkeep
+# Podklady verzovat (zadání projektu)
+
