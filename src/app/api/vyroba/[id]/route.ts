@@ -44,7 +44,9 @@ export async function GET(
         b.batch_code,
         pl.grams_needed,
         pl.grams_to_issue,
-        COALESCE(SUM(inv.amount), 0) AS batch_grams_on_hand,
+        COALESCE((
+          SELECT SUM(inv.amount) FROM inventory inv WHERE inv.batch_id = pl.batch_id
+        ), 0) AS batch_grams_on_hand,
         COALESCE((
           SELECT SUM(pa2.alloc_grams)
           FROM pick_allocations pa2
@@ -56,9 +58,7 @@ export async function GET(
       FROM pick_lines pl
       JOIN items ii ON ii.id = pl.ingredient_item_id
       LEFT JOIN batches b ON b.id = pl.batch_id
-      LEFT JOIN inventory inv ON inv.batch_id = pl.batch_id
       WHERE pl.production_id = ${id}
-      GROUP BY pl.id, ii.name, b.batch_code
       ORDER BY pl.created_at ASC
     `);
 

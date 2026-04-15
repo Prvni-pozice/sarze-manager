@@ -13,11 +13,9 @@ export async function GET() {
         r.version_note,
         r.is_active,
         r.created_at,
-        COUNT(rl.id) AS line_count
+        (SELECT COUNT(*) FROM recipe_lines rl WHERE rl.recipe_id = r.id) AS line_count
       FROM recipes r
       JOIN items i ON i.id = r.product_item_id
-      LEFT JOIN recipe_lines rl ON rl.recipe_id = r.id
-      GROUP BY r.id, i.name
       ORDER BY r.created_at DESC
     `);
 
