@@ -23,6 +23,7 @@ function generateCode(name: string) {
 export default function PrijemPage() {
   const router = useRouter();
   const [items, setItems] = useState<Item[]>([]);
+  const [itemsError, setItemsError] = useState('');
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -38,8 +39,17 @@ export default function PrijemPage() {
 
   useEffect(() => {
     fetch('/api/items')
-      .then((r) => r.json())
-      .then((data: unknown) => setItems(data as Item[]));
+      .then(async (r) => {
+        const data = await r.json() as unknown;
+        if (!r.ok) {
+          setItemsError(String((data as Record<string, unknown>)?.error ?? 'Nepodařilo se načíst položky'));
+          return;
+        }
+        if (Array.isArray(data)) setItems(data as Item[]);
+      })
+      .catch((e: unknown) => {
+        setItemsError(e instanceof Error ? e.message : 'Nepodařilo se načíst položky');
+      });
   }, []);
 
   function handleItemChange(itemId: string) {
@@ -100,6 +110,11 @@ export default function PrijemPage() {
       <form onSubmit={handleSubmit} className="space-y-5 rounded-xl border border-gray-200 bg-white p-6">
         {error && (
           <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">{error}</div>
+        )}
+        {itemsError && (
+          <div className="rounded-lg bg-orange-50 border border-orange-200 px-4 py-3 text-sm text-orange-700">
+            Chyba načítání položek: {itemsError}
+          </div>
         )}
 
         <div>

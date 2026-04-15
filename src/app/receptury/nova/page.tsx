@@ -32,8 +32,11 @@ export default function NovaRecepturaPage() {
 
   useEffect(() => {
     fetch('/api/items')
-      .then((r) => r.json())
-      .then((data: unknown) => setAllItems(data as Item[]));
+      .then(async (r) => {
+        const data = await r.json() as unknown;
+        if (r.ok && Array.isArray(data)) setAllItems(data as Item[]);
+      })
+      .catch(() => {/* tiché selhání — uživatel uvidí prázdný select */});
   }, []);
 
   const productItems = allItems.filter((i) => i.category_type === 'výrobek');
