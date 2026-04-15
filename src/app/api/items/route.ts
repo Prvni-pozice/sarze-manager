@@ -19,12 +19,15 @@ export async function GET() {
         i.min_stock,
         i.created_at,
         i.updated_at,
-        COALESCE(SUM(inv.amount), 0) AS total_stock
+        COALESCE(stock.total, 0) AS total_stock
       FROM items i
       LEFT JOIN categories c ON c.id = i.category_id
       LEFT JOIN vendors v ON v.id = i.vendor_id
-      LEFT JOIN inventory inv ON inv.item_id = i.id
-      GROUP BY i.id, c.name, c.type, v.name
+      LEFT JOIN (
+        SELECT item_id, SUM(amount) AS total
+        FROM inventory
+        GROUP BY item_id
+      ) stock ON stock.item_id = i.id
       ORDER BY i.name ASC
     `);
 

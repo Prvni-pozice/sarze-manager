@@ -15,7 +15,7 @@ export async function GET() {
         b.expires_at,
         b.position,
         b.notes,
-        COALESCE(SUM(inv.amount), 0) AS grams_on_hand,
+        COALESCE(inv.amount, 0) AS grams_on_hand,
         COALESCE((
           SELECT SUM(pa.alloc_grams)
           FROM pick_allocations pa
@@ -27,8 +27,11 @@ export async function GET() {
       FROM batches b
       JOIN items i ON i.id = b.item_id
       JOIN categories c ON c.id = i.category_id
-      LEFT JOIN inventory inv ON inv.batch_id = b.id
-      GROUP BY b.id, i.name, c.type, c.name
+      LEFT JOIN (
+        SELECT batch_id, SUM(amount) AS amount
+        FROM inventory
+        GROUP BY batch_id
+      ) inv ON inv.batch_id = b.id
       ORDER BY b.received_date DESC, b.created_at DESC
     `);
 

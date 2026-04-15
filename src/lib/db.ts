@@ -8,12 +8,13 @@ if (!connectionString) {
   throw new Error('DATABASE_URL není nastavena');
 }
 
-// Serverless-safe: max 1 spojení na invokaci, prepare:false pro pgbouncer/supabase
+// Serverless-safe + Supabase vyžaduje SSL
 const client = postgres(connectionString, {
   prepare: false,
   max: 1,
   idle_timeout: 20,
   connect_timeout: 10,
+  ssl: 'require',
 });
 
 export const db = drizzle(client, { schema });
